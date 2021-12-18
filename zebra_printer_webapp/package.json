@@ -1,0 +1,27 @@
+{
+  "name": "zebra-printer-webapp",
+  "version": "1.0.0",
+  "description": "Web app to print shelf labels from Zebra ZD421",
+  "main": "server.js",
+  "scripts": {
+    "watch": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hsingh17/Zebra-Printer-App.git"
+  },
+  "author": "Harjot Singh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hsingh17/Zebra-Printer-App/issues"
+  },
+  "homepage": "https://github.com/hsingh17/Zebra-Printer-App#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "quagga": "^0.12.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
