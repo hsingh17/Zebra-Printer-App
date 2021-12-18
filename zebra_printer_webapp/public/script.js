@@ -2,7 +2,9 @@
 let constraints = {
     video : {
         width : {max : 640},
-        height : {max : 480}
+        height : {max : 480},
+        facingMode : "environment"
+
     }
 }   // TODO: make it prefer the rear camera
 
@@ -44,5 +46,7 @@ Quagga.onDetected((data) => {
 })
 
 Quagga.onProcessed((data) => {
-    console.log(data)
+    if (data === undefined) return
+    let upc_tag = document.getElementsByClassName("upc")[0]
+    upc_tag.textContent = data.codeResult.code
 })
