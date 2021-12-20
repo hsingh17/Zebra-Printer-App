@@ -13,7 +13,7 @@
         <form action="/label" method="POST">
             <span class="product-upc">
                 <label for="product-upc">UPC Found:
-                    <span class="upc">Nothing yet</span>
+                    <input type="text id="product-upc" name="product-upc" placeholder="Nothing found" readonly>
                 </label>
             </span>
             <span class="product-name">
@@ -23,7 +23,7 @@
     
             <span class="product-price">
                 <label for="product-price">Enter product price:</label>
-                <input type="text" id="product-price" name="product-price" autocomplete="off">
+                <input type="number" id="product-price" name="product-price" autocomplete="off" onkeydown="handle_price_enter(event)" step="0.01" value="0.00">
             </span>
     
             <input type="submit" value="Send to Printer">

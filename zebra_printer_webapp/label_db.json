@@ -1,0 +1,27 @@
+[
+    {
+        "product-upc": "",
+        "product-name": "123123",
+        "product-price": "69.99"
+    },
+    {
+        "product-upc": "",
+        "product-name": "123123",
+        "product-price": "699.91"
+    },
+    {
+        "product-upc": "",
+        "product-name": "wa",
+        "product-price": "7.99"
+    },
+    {
+        "product-upc": "",
+        "product-name": "waasdsada",
+        "product-price": "7.99"
+    },
+    {
+        "product-upc": "",
+        "product-name": "Bud light super jouicer",
+        "product-price": "59.99"
+    }
+]
