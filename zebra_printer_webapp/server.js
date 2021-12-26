@@ -13,18 +13,20 @@ app.use(express.urlencoded({
 })) // https://flaviocopes.com/express-forms/
 
 app.post('/label', async (req, res) => {
-    let data =  await fs.readFile('label_db.json')
+    let data = await fs.readFile('label_db.json')
     let db = JSON.parse(data)
     db.push(req.body)   // Push in the new label request
-    
+
     let new_data = JSON.stringify(db)
     await fs.writeFile('label_db.json', new_data)
     res.status(204).send()  // 204 = No Content Response
 })
 
 app.get('/label', async (req, res) => {
-    let data =  await fs.readFile('label_db.json')
+    let data = await fs.readFile('label_db.json')
     let db = JSON.parse(data)
+
+    await fs.writeFile('label_db.json', JSON.stringify([])) // Clear the old values
     res.json(db)
 })
 

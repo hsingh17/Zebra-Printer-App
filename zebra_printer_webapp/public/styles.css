@@ -2,32 +2,16 @@ body {
     margin: 0;
 }
 
-div {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
 /* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
  /* Chrome, Safari, Edge, Opera */
- input::-webkit-outer-spin-button,
- input::-webkit-inner-spin-button {
+ #product-price::-webkit-outer-spin-button,
+ #product-price::-webkit-inner-spin-button {
    -webkit-appearance: none;
    margin: 0;
  }
  
  /* Firefox */
- input[type=number] {
+ #product-price[type=number] {
    -moz-appearance: textfield;
  }
  

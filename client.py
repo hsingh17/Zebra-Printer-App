@@ -38,16 +38,18 @@ def make_template(upc, name, price):
 res = requests.get('http://localhost:3000/label')
 json_labels = res.json()
 
-# https://www.zebra.com/us/en/support-downloads/knowledge-articles/ait/Network-Printing-Python-Example.html
-skt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)         
-host = "192.168.1.143" 
-port = 9100 # Network printer port
+print(json_labels)
+# # https://www.zebra.com/us/en/support-downloads/knowledge-articles/ait/Network-Printing-Python-Example.html
+# skt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)         
+# # host = "192.168.1.143" 
+# host = "192.168.1.242"
+# port = 9100 # Network printer port
 
-try:
-	skt.connect((host, port)) # Connecting to host
-	for label in json_labels:
-		template = make_template(label['product-upc'], label['product-name'], label['product-price'])
-		skt.send(bytes(template, 'utf-8'))	# Send bytes
-	skt.close() # Close connection
-except:
-	print("Error with the connection")
+# try:
+# 	skt.connect((host, port)) # Connecting to host
+# 	for label in json_labels:
+# 		template = make_template(label['product-upc'], label['product-name'], label['product-price'])
+# 		skt.send(bytes(template, 'utf-8'))	# Send bytes
+# 	skt.close() # Close connection
+# except:
+# 	print("Error with the connection")
