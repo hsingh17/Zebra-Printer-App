@@ -3,8 +3,15 @@ const
     ZERO_CODE = 48,
     NINE_CODE = 57,
     DECIMAL_POINT_LEN = 2, 
-    MAX_PRICE = 1000
-
+    MAX_PRICE = 1000,
+    CONSTRAINTS = { // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+    audio : false,
+    video : {
+        width : {max : 640},
+        height : {max : 480},
+        facingMode : 'environment'
+    }
+}  
 
 let handle_price_enter = (e) => {
     let key = e.keyCode
@@ -31,44 +38,14 @@ let handle_price_enter = (e) => {
     product_price_tag.value = price.toFixed(2)
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-let constraints = {
-    video : {
-        width : {max : 640},
-        height : {max : 480},
-        facingMode : 'environment'
-    }
-}   
-
 let load_media = async () => {
     try {
-        let stream = await navigator.mediaDevices.getUserMedia(constraints)
+        let stream = await navigator.mediaDevices.getUserMedia(CONSTRAINTS)
         let video_tag = document.querySelector('video')
-        let btn = document.getElementsByName('video_btn')[0]
+        enter_fullscreen()
         video_tag.srcObject = stream
-        video_tag.onloadedmetadata = (e) => {
-            video_tag.play()
-            Quagga.init({
-                inputStream : {
-                    name : 'Live',
-                    type : 'LiveStream',
-                    target : video_tag
-                },
-                decoder : {
-                    readers : ['upc_reader', 'ean_8_reader'],
-                    locate : true
-                }
-            }, (err) => {
-                if (err) {
-                    console.error(err)
-                    return
-                }
-                console.log('Quagga Initialization Complete')
-                btn.value = 'Stop Scanning'
-                btn.onclick = stop_media
-                Quagga.start()
-            })
-        }
+        video_tag.onfullscreenchange = toggle_video
+        video_tag.onloadedmetadata = video_loaded
     } catch(e) {
         console.error(e)
     }
@@ -76,12 +53,81 @@ let load_media = async () => {
 
 let stop_media = () => {
     let video_tag = document.querySelector('video')
-    let btn = document.getElementsByName('video_btn')[0] 
     video_tag.pause()   // Pause video player
     video_tag.srcObject = null  // Remove video source
-    btn.value = 'Start Scanning'  // Change btn to start scanning
-    btn.onclick = load_media    //Change button's onclick
+    exit_fullscreen() // Exit fullscreen
     Quagga.stop()   // Stop Quagga
+}
+
+let form_handler = () => {
+    let form = document.getElementsByTagName('form')[0]
+    form.submit()
+    form.reset()
+}
+
+let enter_fullscreen = () => {
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API
+    let video_tag = document.querySelector('video')
+    if (video_tag.requestFullscreen) {
+        video_tag.requestFullscreen();
+    } else if (video_tag.mozRequestFullScreen) {
+        video_tag.mozRequestFullScreen();
+    } else if (video_tag.webkitRequestFullscreen) {
+        video_tag.webkitRequestFullscreen();
+    } else if (video_tag.msRequestFullscreen) {
+        video_tag.msRequestFullscreen();
+    }
+}
+
+let exit_fullscreen = () => {
+    // https://stackoverflow.com/questions/9620223/make-div-fullscreen-onclick-of-a-button
+    if (document.exitFullscreen){
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen){
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen){
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen){
+        document.msExitFullscreen();
+    }
+}
+
+let toggle_video = () => {
+    let video_tag = document.querySelector('video')
+    if (document.fullscreenElement) {
+        video_tag.style.display = 'block'
+    } else {
+        video_tag.style.display = 'none'
+    }
+}
+
+let video_loaded = () => {
+    let video_tag = document.querySelector('video')
+    video_tag.play()
+    init_quagga()
+}
+
+let init_quagga = () => {
+    let video_tag = document.querySelector('video')
+    Quagga.init({
+        inputStream : {
+            name : 'Live',
+            type : 'LiveStream',
+            target : video_tag,
+            constraints : CONSTRAINTS
+        },
+        decoder : {
+            readers : ['upc_reader', 'ean_8_reader'],
+            locate : true
+        }
+    }, (err) => {
+        if (err) {
+            console.error(err)
+            return
+        }
+        console.log('Quagga Initialization Complete')
+        Quagga.start()
+    })
 }
 
 Quagga.onProcessed((data) => {
@@ -91,9 +137,3 @@ Quagga.onProcessed((data) => {
     stop_media()
 })
 
-
-let form_handler = () => {
-    let form = document.getElementsByTagName('form')[0]
-    form.submit()
-    form.reset()
-}
