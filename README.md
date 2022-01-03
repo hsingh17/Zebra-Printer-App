@@ -6,6 +6,7 @@ The purpose of this web app is to make an easy-to-use interface to print 2x1 inc
 
 ## Label Template
 ![Example Label](/images/example_label.png)
+
 Each shelf label contains three parts: The product's UPC, name, and price. The ZPL template used for this particular label can be found in `images/shelf_label_template.prn`.
 
 ## Tools/Libraries
