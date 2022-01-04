@@ -44,18 +44,18 @@ json_labels = res.json()
 
 # https://www.zebra.com/us/en/support-downloads/knowledge-articles/ait/Network-Printing-Python-Example.html
 skt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)         
-# host = "192.168.1.143"  (HOME)
-host = "192.168.1.242"	(STORE)
+host = "192.168.1.143"  # (HOME)
+# host = "192.168.1.242"	# (STORE)
 port = 9100 # Network printer port
 
 try:
 	skt.connect((host, port)) # Connecting to host
 	for label in json_labels:
-		num_labels = label['label-count']
+		print(label)
+		num_labels = int(label['label-count'])
 		template = make_template(label['product-upc'], label['product-name'], label['product-price'])
 		for i in range(num_labels):	
 			skt.send(bytes(template, 'utf-8'))	# Send bytes
-			
 	skt.close() # Close connection
 except:
 	print("Error with the connection")
