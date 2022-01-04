@@ -4,6 +4,7 @@
   "description": "Web app to print shelf labels from Zebra ZD421",
   "main": "server.js",
   "scripts": {
+    "start" : "node zebra_printer_webapp/server.js",
     "watch": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
