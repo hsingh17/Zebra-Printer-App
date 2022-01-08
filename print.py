@@ -1,3 +1,4 @@
+import json
 import socket
 import requests
 import time
@@ -39,7 +40,7 @@ def make_template(upc, name, price):
 
 
 # Make a GET request to server to get pending labels
-res = requests.get('http://localhost:3000/label')
+res = requests.get('https://zebra-printer-webapp.herokuapp.com/label')
 json_labels = res.json()
 
 # https://www.zebra.com/us/en/support-downloads/knowledge-articles/ait/Network-Printing-Python-Example.html
