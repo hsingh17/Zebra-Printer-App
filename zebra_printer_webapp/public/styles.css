@@ -24,3 +24,19 @@ body {
 video {
   display: none;
 }
+
+@keyframes fade {
+  0% { opacity: 0%; }
+  50% { opacity: 100%; }
+  100% { opacity: 0%; }
+}
+
+#product-alert-init {
+  opacity: 0%;
+}
+
+#product-alert-on {
+  animation-name: fade;
+  animation-duration: 2s;
+}
+

@@ -61,8 +61,14 @@ let stop_media = () => {
 
 let form_handler = () => {
     let form = document.getElementsByTagName('form')[0]
-    form.submit()
-    form.reset()
+    let product_name = document.getElementById('product-name').value
+    console.log(product_name, product_name.length)
+    if (product_name.length == 0) {
+        toggle_alert()
+    } else {
+        form.submit()
+        form.reset()
+    }
 }
 
 let enter_fullscreen = () => {
@@ -128,6 +134,15 @@ let init_quagga = () => {
         console.log('Quagga Initialization Complete')
         Quagga.start()
     })
+}
+
+let toggle_alert = () => {
+    // Turn on user alert to notify user to put in product name
+    let alert = document.getElementById('product-alert-init')
+    alert.id = 'product-alert-on'   // Turn on alert
+    setTimeout(() => { 
+        alert.id = 'product-alert-init'
+    }, 2000)    // Turn off after 2s
 }
 
 Quagga.onProcessed((data) => {
