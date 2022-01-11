@@ -117,7 +117,7 @@ let init_quagga = () => {
             constraints : CONSTRAINTS
         },
         decoder : {
-            readers : ['upc_reader', 'ean_8_reader'],
+            readers : ['upc_reader', 'upc_e_reader'],
             locate : true
         }
     }, (err) => {
