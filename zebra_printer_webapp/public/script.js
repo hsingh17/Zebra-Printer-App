@@ -4,6 +4,7 @@ const
     NINE_CODE = 57,
     DECIMAL_POINT_LEN = 2, 
     MAX_PRICE = 1000,
+    MAX_CHAR_NAME = 30
     CONSTRAINTS = { // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
     audio : false,
     video : {
@@ -62,9 +63,8 @@ let stop_media = () => {
 let form_handler = () => {
     let form = document.getElementsByTagName('form')[0]
     let product_name = document.getElementById('product-name').value
-    console.log(product_name, product_name.length)
-    if (product_name.length == 0) {
-        toggle_alert()
+    if (product_name.length === 0) {
+        toggle_alert('Enter a product name!')
     } else {
         form.submit()
         form.reset()
@@ -136,13 +136,31 @@ let init_quagga = () => {
     })
 }
 
-let toggle_alert = () => {
-    // Turn on user alert to notify user to put in product name
+let toggle_alert = (msg) => {
+    // Turn on user alert to notify user of error
     let alert = document.getElementById('product-alert-init')
+    let alert_msg = document.getElementById('alert-msg')
+    alert_msg.textContent = msg // Add alert's message
     alert.id = 'product-alert-on'   // Turn on alert
-    setTimeout(() => { 
-        alert.id = 'product-alert-init'
-    }, 2000)    // Turn off after 2s
+    setTimeout(() => { alert.id = 'product-alert-init' }, 2000)    // Turn off after 2s
+}
+
+let fetch_name_suggestion = async (upc) => {
+    let loading_div = document.getElementById('product-alert-loading')
+    loading_div.style.opacity = '100%'
+
+    let res = await fetch(`/upc/${upc}`)
+    let data = await res.json()
+    let product_name = document.getElementById('product-name')
+    
+    loading_div.style.opacity = '0%'
+    if (!data.hasOwnProperty('error')) {
+        let suggested_name = (data['brand_name'] + ' ' + data['name']).trim()
+        let min_suggested_name = suggested_name.substring(0, Math.min(suggested_name.length, MAX_CHAR_NAME)) 
+        product_name.value = min_suggested_name
+    } else {
+        toggle_alert('No suggestions found for this UPC. Please enter product name.')
+    }
 }
 
 Quagga.onProcessed((data) => {
@@ -150,5 +168,6 @@ Quagga.onProcessed((data) => {
     let upc_tag = document.getElementsByName('product-upc')[0]
     upc_tag.value = data.codeResult.code
     stop_media()
+    fetch_name_suggestion(data.codeResult.code)
 })
 

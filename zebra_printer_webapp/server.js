@@ -1,8 +1,9 @@
+const fetch = require('node-fetch')
 const express = require('express')
 const app = express()
 const path = require('path')
 const fs = require('fs/promises')
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8080
 const label_db_path = path.join(__dirname, 'label_db.json')
 
 // In case localhost doesn't work: https://stackoverflow.com/questions/58929202/connection-refused-on-localhost
@@ -28,6 +29,13 @@ app.get('/label', async (req, res) => {
 
     await fs.writeFile(label_db_path, JSON.stringify([])) // Clear the old values
     res.json(db)
+})
+
+app.get('/upc/:upc', async (req, res) => {
+    const upc = req.params.upc
+    const resp = await fetch(`https://www.brocade.io/api/items/${upc}`)
+    const json = await resp.json()
+    res.json(json)
 })
 
 app.listen(PORT, () => {

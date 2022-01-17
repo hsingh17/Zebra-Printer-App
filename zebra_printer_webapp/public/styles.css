@@ -40,3 +40,6 @@ video {
   animation-duration: 2s;
 }
 
+#product-alert-loading {
+  opacity: 0%;
+}
