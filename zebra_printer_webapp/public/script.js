@@ -147,20 +147,47 @@ let toggle_alert = (msg) => {
 
 let fetch_name_suggestion = async (upc) => {
     let loading_div = document.getElementById('product-alert-loading')
-    loading_div.style.opacity = '100%'
-
-    let res = await fetch(`/upc/${upc}`)
+    loading_div.style.opacity = '100%'  // Turn on loading notification
+    let res = await fetch(`/name/${upc}`)
     let data = await res.json()
-    let product_name = document.getElementById('product-name')
+    loading_div.style.opacity = '0%'    // Turn off loading notification
+
+    let dropdown = document.getElementById('dropdown')
+    while (dropdown.firstChild) { dropdown.removeChild(dropdown.firstChild) }  // Remove any previous suggestions
     
-    loading_div.style.opacity = '0%'
-    if (!data.hasOwnProperty('error')) {
-        let suggested_name = (data['brand_name'] + ' ' + data['name']).trim()
-        let min_suggested_name = suggested_name.substring(0, Math.min(suggested_name.length, MAX_CHAR_NAME)) 
-        product_name.value = min_suggested_name
-    } else {
-        toggle_alert('No suggestions found for this UPC. Please enter product name.')
+    if (Object.keys(data).length === 0) {   // No suggestions found
+        toggle_alert('No suggestions found for this UPC. Please enter a name.')
+        return
     }
+    
+    let sugg_arr = Array.from(data)
+    let product_name = document.getElementById('product-name')
+    sugg_arr.sort((a, b) => { return a.length - b.length})  // Sort by length (ascending) https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+    sugg_arr.forEach(suggestion => {
+        // https://www.javascripttutorial.net/dom/manipulating/create-a-dom-element/
+        const div = document.createElement('div')
+        const span = document.createElement('span')
+        span.className = 'ms-1'
+        span.textContent = suggestion
+        div.className = 'noselect'
+
+        div.addEventListener('click', e => { 
+            product_name.value = e.target.textContent   // Set the selected name to be the input
+            dropdown.style.visibility = 'hidden' // Make dropdown invisible
+        })   
+
+        div.appendChild(span)
+        dropdown.appendChild(div)
+    })
+
+    dropdown.style.visibility = 'visible' // Make dropdown visible
+}
+
+let toggle_dropdown = e => {
+    let flag = (e.target.id === 'product-name') ? true : false  // flag tells us if the product name form box was clicked
+    let dropdown = document.getElementById('dropdown')
+    if (flag && dropdown.children.length) { dropdown.style.visibility = 'visible'} // Only show dropdown if we have things to show
+    if (!flag && dropdown.style.visibility === 'visible') { dropdown.style.visibility = 'hidden'} // Hide dropdown if nothing to show
 }
 
 Quagga.onProcessed((data) => {

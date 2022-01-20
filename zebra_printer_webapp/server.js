@@ -3,6 +3,9 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const fs = require('fs/promises')
+const jsdom = require("jsdom")
+const { response } = require('express')
+const { JSDOM } = jsdom
 const PORT = process.env.PORT || 8080
 const label_db_path = path.join(__dirname, 'label_db.json')
 
@@ -31,11 +34,18 @@ app.get('/label', async (req, res) => {
     res.json(db)
 })
 
-app.get('/upc/:upc', async (req, res) => {
+app.get('/name/:upc', async (req, res) => {
     const upc = req.params.upc
-    const resp = await fetch(`https://www.brocade.io/api/items/${upc}`)
-    const json = await resp.json()
-    res.json(json)
+    const resp = await fetch(`https://www.upcitemdb.com/upc/${upc}`)
+    const html = await resp.text()
+    const { document }  = (new JSDOM(html)).window
+    const ol = document.querySelector('ol.num')
+    if (ol) {
+        const ret = Array.from(ol.children).map(e =>  e.textContent)
+        res.json(ret)
+        return
+    }
+    res.json({})
 })
 
 app.listen(PORT, () => {

@@ -43,3 +43,36 @@ video {
 #product-alert-loading {
   opacity: 0%;
 }
+
+#dropdown {
+  overflow-y: auto;
+  overflow-x: auto;
+  visibility: hidden;
+  max-height: 50vh;
+  background-color: #EEEEEE;
+  border: thin solid #A9A9A9;
+}
+
+
+#dropdown div:not(:first-child) {
+  border-top: medium solid #979797;
+}
+
+#dropdown div:hover {
+  background-color: #B1B1B1;
+}
+
+#dropdown div:active {
+  background-color: #B1B1B1;
+}
+
+/* https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
