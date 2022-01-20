@@ -21,6 +21,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "node-fetch": "^2.6.6",
+    "jsdom": "^19.0.0",
     "quagga": "^0.12.1"
   },
   "devDependencies": {
